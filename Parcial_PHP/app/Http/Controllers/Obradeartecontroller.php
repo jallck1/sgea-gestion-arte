@@ -1,6 +1,9 @@
 <?php
 
 namespace App\Http\Controllers;
+use App\Models\Artista;
+use App\Models\obra_arte;
+
 
 use Illuminate\Http\Request;
 
@@ -42,35 +45,45 @@ class obradeartecontroller extends Controller
         return redirect()->route('obras.index')->with('success', 'Obra de arte creada correctamente.');
     }
 
-    /**
-     * Display the specified resource.
-     */
-    public function show(string $id)
+    // Mostrar una obra específica
+    public function show($id)
     {
-        //
+        $obra = ObraDeArte::findOrFail($id);
+        return view('obras.show', compact('obra'));
     }
 
-    /**
-     * Show the form for editing the specified resource.
-     */
-    public function edit(string $id)
+    // Mostrar formulario para editar una obra
+    public function edit($id)
     {
-        //
+        $obra = ObraDeArte::findOrFail($id);
+        $artistas = Artista::all();
+        return view('obras.edit', compact('obra', 'artistas'));
     }
 
-    /**
-     * Update the specified resource in storage.
-     */
-    public function update(Request $request, string $id)
+    // Actualizar una obra
+    public function update(Request $request, $id)
     {
-        //
+        $obra = ObraDeArte::findOrFail($id);
+
+        $request->validate([
+            'titulo' => 'required|string|max:255',
+            'descripcion' => 'required',
+            'artista_id' => 'required|exists:artistas,id',
+            'fecha_creacion' => 'required|date',
+            'precio' => 'required|numeric|min:0',
+        ]);
+
+        $obra->update($request->all());
+
+        return redirect()->route('obras.index')->with('success', 'Obra de arte actualizada exitosamente');
     }
 
-    /**
-     * Remove the specified resource from storage.
-     */
-    public function destroy(string $id)
+    // Eliminar una obra
+    public function destroy($id)
     {
-        //
+        $obra = ObraDeArte::findOrFail($id);
+        $obra->delete();
+
+        return redirect()->route('obras.index')->with('success', 'Obra de arte eliminada exitosamente');
     }
 }

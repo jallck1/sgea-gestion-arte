@@ -1,7 +1,7 @@
 <?php
 
 namespace App\Http\Controllers;
-
+use App\Models\Artista;
 use Illuminate\Http\Request;
 
 class exposicioncontroller extends Controller

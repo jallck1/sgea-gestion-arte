@@ -13,13 +13,12 @@ return new class extends Migration
     {
         Schema::create('obra_artes', function (Blueprint $table) {
             $table->id();
+            $table->string('titulo');
+            $table->text('descripcion');
+            $table->foreignId('artista_id')->constrained(); // Llave foránea hacia Artistas
+            $table->date('fecha_creacion');
+            $table->decimal('precio', 8, 2);
             $table->timestamps();
-            $table->foreignId('artista_id')->constrained('artistas')->onDelete('cascade'); 
-            $table->string('titulo', 50);
-            $table->string('año', 4);
-            $table->string('tecnica', 50);
-            $table->string('dimensiones', 30);
-            $table->string('descripcion', 20);
         });
     }
 

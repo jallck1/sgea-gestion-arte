@@ -21,9 +21,17 @@ Route::middleware('auth')->group(function () {
 });
 
 Route::middleware(['auth'])->group(function () {
-    Route::resource('artistas', ArtistaController::class);
-    Route::resource('obras', Obradeartecontroller::class);
-    Route::resource('exposiciones', Exposicioncontroller::class);
+
+    //  artistas
+Route::resource('artistas', ArtistaController::class);
+
+// obras de arte
+Route::resource('obras', Obradeartecontroller::class);
+
+//exposiciones
+Route::resource('exposiciones', Exposicioncontroller::class);
+
+
 });
 
 require __DIR__.'/auth.php';
