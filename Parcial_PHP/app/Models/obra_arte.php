@@ -4,7 +4,7 @@ namespace App\Models;
 
 use Illuminate\Database\Eloquent\Model;
 
-class artista extends Model
+class obra_arte extends Model
 {
     //
 }
