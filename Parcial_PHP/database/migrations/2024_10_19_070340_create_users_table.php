@@ -11,15 +11,12 @@ return new class extends Migration
      */
     public function up(): void
     {
-        Schema::create('obra_artes', function (Blueprint $table) {
+        Schema::create('users', function (Blueprint $table) {
             $table->id();
+            $table->string('name');
+            $table->string('email')->unique();
+            $table->string('password');
             $table->timestamps();
-            $table->foreignId('artista_id')->constrained('artistas')->onDelete('cascade'); 
-            $table->string('titulo', 50);
-            $table->string('año', 4);
-            $table->string('tecnica', 50);
-            $table->string('dimensiones', 30);
-            $table->string('descripcion', 20);
         });
     }
 
@@ -28,6 +25,7 @@ return new class extends Migration
      */
     public function down(): void
     {
-        Schema::dropIfExists('obra_artes');
+        Schema::dropIfExists('users');
+        
     }
 };
