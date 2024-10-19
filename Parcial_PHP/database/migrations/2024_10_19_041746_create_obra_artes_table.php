@@ -14,6 +14,12 @@ return new class extends Migration
         Schema::create('obra_artes', function (Blueprint $table) {
             $table->id();
             $table->timestamps();
+           # $tabke->artista_id();
+            $table->string('titulo', 50);
+            $table->strign('año', 4);
+            $table->string('tecnica', 50);
+            $table->string('dimensiones', 30);
+            $table->string('descripcion', 20);
         });
     }
 

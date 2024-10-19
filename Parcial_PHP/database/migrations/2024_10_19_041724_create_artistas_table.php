@@ -14,6 +14,11 @@ return new class extends Migration
         Schema::create('artistas', function (Blueprint $table) {
             $table->id();
             $table->timestamps();
+            $table->string('nombre', 50);
+            $table->string('apellidos',50);
+            $table->string('nacionalidad', 20);
+            $table->string('biografia', 50);
+
         });
     }
 

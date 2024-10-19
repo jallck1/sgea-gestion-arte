@@ -14,6 +14,11 @@ return new class extends Migration
         Schema::create('exposicions', function (Blueprint $table) {
             $table->id();
             $table->timestamps();
+            $table->string('fecha_inicio', 10);
+            $table->string('fecha_fin', 10);
+            $table->string('ubicacion', 10);
+            $table->string('nombre_evento', 10);
+
         });
     }
 
