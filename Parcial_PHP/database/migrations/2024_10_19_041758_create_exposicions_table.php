@@ -18,6 +18,7 @@ return new class extends Migration
             $table->string('fecha_fin', 10);
             $table->string('ubicacion', 10);
             $table->string('nombre_evento', 10);
+            $table->foreignId('obra_arte_id')->constrained('obra_artes')->onDelete('cascade'); // Relación con Obra de Arte
 
         });
     }
