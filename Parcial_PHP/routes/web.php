@@ -32,10 +32,23 @@ Route::get('/artists/{artist}/edit', [ArtistController::class, 'edit'])->name('a
 
 
 // obras de arte
-Route::resource('obras', Obradeartecontroller::class);
+Route::get('/obras', [Obradeartecontroller::class, 'index'])->name('obras.index');
+Route::post('/obras', [Obradeartecontroller::class, 'store'])->name('obras.store');
+Route::get('/obras/create', [Obradeartecontroller::class, 'create'])->name('obras.create');
+Route::get('/obras/{obra}', [Obradeartecontroller::class, 'show'])->name('obras.show');
+Route::get('/obras/{obra}/edit', [Obradeartecontroller::class, 'edit'])->name('obras.edit');
+Route::put('/obras/{obra}', [Obradeartecontroller::class, 'update'])->name('obras.update');
+Route::delete('/obras/{obra}', [Obradeartecontroller::class, 'destroy'])->name('obras.destroy');
 
-//exposiciones
-Route::resource('exposiciones', Exposicioncontroller::class);
+
+// Exposiciones
+Route::get('/exposiciones', [Exposicioncontroller::class, 'index'])->name('exposiciones.index');
+Route::post('/exposiciones', [Exposicioncontroller::class, 'store'])->name('exposiciones.store');
+Route::get('/exposiciones/create', [Exposicioncontroller::class, 'create'])->name('exposiciones.create');
+Route::get('/exposiciones/{exposicion}', [Exposicioncontroller::class, 'show'])->name('exposiciones.show');
+Route::get('/exposiciones/{exposicion}/edit', [Exposicioncontroller::class, 'edit'])->name('exposiciones.edit');
+Route::put('/exposiciones/{exposicion}', [Exposicioncontroller::class, 'update'])->name('exposiciones.update');
+Route::delete('/exposiciones/{exposicion}', [Exposicioncontroller::class, 'destroy'])->name('exposiciones.destroy');
 
 
 

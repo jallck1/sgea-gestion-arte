@@ -1,4 +1,4 @@
-<?php
+<?php 
 
 namespace App\Http\Controllers;
 
@@ -41,9 +41,9 @@ class ExposicionController extends Controller
             'nombre_evento' => 'required',
             'obra_arte_id' => 'required|exists:obra_artes,id', // Verifica que la obra de arte exista
         ]);
-    
+
         Exposicion::create($request->all()); // Guarda la exposición
-    
+
         return redirect()->route('exposiciones.index')->with('success', 'Exposición creada correctamente.');
     }
 
@@ -52,7 +52,7 @@ class ExposicionController extends Controller
      */
     public function show(string $id)
     {
-        //
+        // Aquí puedes implementar la lógica para mostrar una exposición específica
     }
 
     /**
@@ -60,7 +60,9 @@ class ExposicionController extends Controller
      */
     public function edit(string $id)
     {
-        //
+        $exposicion = Exposicion::findOrFail($id); // Encuentra la exposición por ID
+        $obrasArte = ObraArte::all(); // Cargar todas las obras de arte para el select
+        return view('exposiciones.edit', compact('exposicion', 'obrasArte')); // Pasar la exposición y las obras al formulario
     }
 
     /**
@@ -68,7 +70,19 @@ class ExposicionController extends Controller
      */
     public function update(Request $request, string $id)
     {
-        //
+        // Valida los datos
+        $request->validate([
+            'fecha_inicio' => 'required',
+            'fecha_fin' => 'required',
+            'ubicacion' => 'required',
+            'nombre_evento' => 'required',
+            'obra_arte_id' => 'required|exists:obra_artes,id', // Verifica que la obra de arte exista
+        ]);
+
+        $exposicion = Exposicion::findOrFail($id); // Encuentra la exposición por ID
+        $exposicion->update($request->all()); // Actualiza la exposición
+
+        return redirect()->route('exposiciones.index')->with('success', 'Exposición actualizada correctamente.');
     }
 
     /**
@@ -76,6 +90,9 @@ class ExposicionController extends Controller
      */
     public function destroy(string $id)
     {
-        //
+        $exposicion = Exposicion::findOrFail($id); // Encuentra la exposición por ID
+        $exposicion->delete(); // Elimina la exposición
+
+        return redirect()->route('exposiciones.index')->with('success', 'Exposición eliminada correctamente.');
     }
 }
