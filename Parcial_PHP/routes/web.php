@@ -2,7 +2,7 @@
 
 use App\Http\Controllers\ProfileController;
 use Illuminate\Support\Facades\Route;
-use App\Http\Controllers\ArtistaController;
+use App\Http\Controllers\ArtistController;
 use App\Http\Controllers\Obradeartecontroller;
 use App\Http\Controllers\Exposicioncontroller;
 
@@ -22,14 +22,21 @@ Route::middleware('auth')->group(function () {
 
 Route::middleware(['auth'])->group(function () {
 
-    //  artistas
-Route::resource('artistas', ArtistaController::class);
+//  artistas
+Route::get('/artists', [ArtistController::class, 'index'])->name('artists.index');
+Route::post('/artists', [ArtistController::class, 'store'])->name('artists.store');
+Route::get('/artists/create', [ArtistController::class, 'create'])->name('artists.create');
+Route::delete('/artists/{artist}', [ArtistController::class, 'destroy'])->name('artists.destroy');
+Route::put('/artists/{artist}', [ArtistController::class, 'update'])->name('artists.update');
+Route::get('/artists/{artist}/edit', [ArtistController::class, 'edit'])->name('artists.edit');
+
 
 // obras de arte
 Route::resource('obras', Obradeartecontroller::class);
 
 //exposiciones
 Route::resource('exposiciones', Exposicioncontroller::class);
+
 
 
 });

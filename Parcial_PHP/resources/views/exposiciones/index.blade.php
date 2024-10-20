@@ -4,7 +4,7 @@
 <div class="container">
     <h1>Listado de Exposiciones</h1>
     
-    <a href="{{ route('exposicions.create') }}" class="btn btn-primary">Nueva Exposición</a>
+    <a href="{{ route('exposiciones.create') }}" class="btn btn-primary">Nueva Exposición</a>
 
     <table class="table table-bordered mt-3">
         <thead>
@@ -28,9 +28,9 @@
                 <td>{{ $exposicion->nombre_evento }}</td>
                 <td>{{ $exposicion->obra_arte->nombre }}</td>
                 <td>
-                    <a href="{{ route('exposicions.show', $exposicion->id) }}" class="btn btn-info">Ver</a>
-                    <a href="{{ route('exposicions.edit', $exposicion->id) }}" class="btn btn-warning">Editar</a>
-                    <form action="{{ route('exposicions.destroy', $exposicion->id) }}" method="POST" style="display:inline-block;">
+                    <a href="{{ route('exposiciones.show', $exposicion->id) }}" class="btn btn-info">Ver</a>
+                    <a href="{{ route('exposiciones.edit', $exposicion->id) }}" class="btn btn-warning">Editar</a>
+                    <form action="{{ route('exposiciones.destroy', $exposicion->id) }}" method="POST" style="display:inline-block;">
                         @csrf
                         @method('DELETE')
                         <button type="submit" class="btn btn-danger">Eliminar</button>
