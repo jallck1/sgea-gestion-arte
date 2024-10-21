@@ -37,6 +37,9 @@ Asegúrate de que todas las rutas relacionadas con la administración del sistem
 
 ![image](https://github.com/user-attachments/assets/b6d173ac-63a8-44a6-a80a-5142a3e9b8db)
 
+![image](https://github.com/user-attachments/assets/eec8f6e5-255e-4d8f-b689-fadd17e56136)
+
+
 
 
 
