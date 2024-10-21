@@ -1,30 +1,35 @@
 <?php
 
 namespace App\Http\Controllers;
-use App\Models\Artista;
-use App\Models\obra_arte;
-
 
 use Illuminate\Http\Request;
+use App\Models\Obra;
+use App\Models\Artista;
+use Illuminate\Support\Facades\DB;
 
-class obradeartecontroller extends Controller
+class ObradearteController extends Controller
 {
     /**
      * Display a listing of the resource.
      */
     public function index()
     {
-        $obras = ObraArte::with('artista')->get(); // Carga el artista asociado
-        return view('obras.index', compact('obras'));
+        $obras = DB::table('obras')
+        ->join('artista', 'obras.artista_id', '=', 'artista.id')
+        ->select('obras.*', 'artista.nombre')
+        ->get();
+        return view('obra.index', ['obras'=> $obras]);
     }
 
     /**
      * Show the form for creating a new resource.
      */
     public function create()
-    {
-        $artistas = Artista::all(); // Cargar artistas para el formulario
-        return view('obras.create', compact('artistas'));
+    {   
+        $artista = DB::table('artista')
+        ->orderBy('nombre')
+        ->get();
+        return view('obra.new', ['artista'=> $artistas]);
     }
 
     /**
@@ -32,58 +37,85 @@ class obradeartecontroller extends Controller
      */
     public function store(Request $request)
     {
-        $request->validate([
-            'titulo' => 'required',
-            'año' => 'required',
-            'tecnica' => 'required',
-            'dimensiones' => 'required',
-            'descripcion' => 'nullable',
-            'artista_id' => 'required|exists:artistas,id', // Verifica que el artista exista
-        ]);
+        $obra = new Obra();
+        $obra->titulo = $request->titulo;
+        $obra->año = $request->año;
+        $obra->tecnica = $request->tecnica;
+        $obra->dimensiones = $request->dimensiones;
+        $obra->descripcion = $request->descripcion;
+        $obra->artista_id = $request->artista_id;
+        
+        $obra->save();
 
-        ObraArte::create($request->all());
-        return redirect()->route('obras.index')->with('success', 'Obra de arte creada correctamente.');
+        $obras = DB::table('obras')
+        ->join('artistas', 'obras.artista_id', '=', 'artistas.id')
+        ->select('obras.*', 'artistas.nombre')
+        ->get();
+
+        return view('obra.index', ['obras' => $obras]);
+
     }
 
-    // Mostrar una obra específica
-    public function show($id)
+    /**
+     * Display the specified resource.
+     */
+    public function show(string $id)
     {
-        $obra = ObraDeArte::findOrFail($id);
-        return view('obras.show', compact('obra'));
+        //
     }
 
-    // Mostrar formulario para editar una obra
-    public function edit($id)
+    /**
+     * Show the form for editing the specified resource.
+     */
+    public function edit(string $id)
     {
-        $obra = ObraDeArte::findOrFail($id);
-        $artistas = Artista::all();
-        return view('obras.edit', compact('obra', 'artistas'));
+        $obra = Obra::find($id);
+        $artistas = DB::table('artistas')
+        ->orderBy('id')
+        ->get();
+
+        return view('obra.edit', ['obra' => $obra, 'artistas' => $artistas]);
     }
 
-    // Actualizar una obra
-    public function update(Request $request, $id)
+    /**
+     * Update the specified resource in storage.
+     */
+    public function update(Request $request, string $id)
     {
-        $obra = ObraDeArte::findOrFail($id);
+        $obra = Obra::find($id); 
 
-        $request->validate([
-            'titulo' => 'required|string|max:255',
-            'descripcion' => 'required',
-            'artista_id' => 'required|exists:artistas,id',
-            'fecha_creacion' => 'required|date',
-            'precio' => 'required|numeric|min:0',
-        ]);
+        $obra->titulo = $request->titulo;
+        $obra->año = $request->año;
+        $obra->tecnica = $request->tecnica;
+        $obra->dimensiones = $request->dimensiones;
+        $obra->descripcion = $request->descripcion;
+        $obra->artista_id = $request->artista_id;
+        
+        $obra->save();
 
-        $obra->update($request->all());
+        $obras = DB::table('obras')
+        ->join('artistas', 'obras.artista_id', '=', 'artistas.id')
+        ->select('obras.*', 'artistas.nombre')
+        ->get();
 
-        return redirect()->route('obras.index')->with('success', 'Obra de arte actualizada exitosamente');
+        return view('obra.index', ['obras' => $obras]);
+        
     }
 
-    // Eliminar una obra
-    public function destroy($id)
+    /**
+     * Remove the specified resource from storage.
+     */
+    public function destroy(string $id)
     {
-        $obra = ObraDeArte::findOrFail($id);
+        $obra = Obra::find($id);
         $obra->delete();
 
-        return redirect()->route('obras.index')->with('success', 'Obra de arte eliminada exitosamente');
+        $obras = DB::table('obras')
+        ->join('artistas', 'obras.artista_id', '=', 'artistas.id')
+        ->select('obras.*', 'artistas.nombre')
+        ->get();
+
+        return view('obra.index', ['obras' => $obras]);
+
     }
 }

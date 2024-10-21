@@ -2,17 +2,19 @@
 
 namespace App\Http\Controllers;
 
+use App\Models\Artista;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\DB;
 
-class artistaController extends Controller
+class ArtistaController extends Controller
 {
     /**
      * Display a listing of the resource.
      */
     public function index()
     {
-        $artistas = Artista::with('obras')->get(); // Carga las obras asociadas
-        return view('artistas.index', compact('artistas'));
+        $artistas = Artista::all();
+        return view('artista.index', ['artistas' => $artistas]);
     }
 
     /**
@@ -20,7 +22,7 @@ class artistaController extends Controller
      */
     public function create()
     {
-        return view('artistas.create');
+        return view('artista.new');
     }
 
     /**
@@ -28,17 +30,15 @@ class artistaController extends Controller
      */
     public function store(Request $request)
     {
-         $request->validate([
-            'nombre' => 'required',
-            'apellidos' => 'required',
-            'nacionalidad' => 'required',
-            'biografia' => 'nullable',
-        ]);
+        $artista = new Artista();
+        $artista->nombre = $request->nombre;
+        $artista->apellido = $request->apellido;
+        $artista->nacionalidad = $request->nacionalidad;
+        $artista->biografia = $request->biografia;
+        $artista->save();
 
-        Artista::create($request->all());
-        return redirect()->route('artistas.index')->with('success', 'Artista creado correctamente.');
+        return redirect()->route('artistas.index');
     }
-    
 
     /**
      * Display the specified resource.
@@ -53,7 +53,8 @@ class artistaController extends Controller
      */
     public function edit(string $id)
     {
-        //
+        $artista = Artista::find($id);
+        return view('artista.edit', ['artista' => $artista]);
     }
 
     /**
@@ -61,7 +62,14 @@ class artistaController extends Controller
      */
     public function update(Request $request, string $id)
     {
-        //
+        $artista = Artista::find($id);
+        $artista->nombre = $request->nombre;
+        $artista->apellido = $request->apellido;
+        $artista->nacionalidad = $request->nacionalidad;
+        $artista->biografia = $request->biografia;
+        $artista->save();
+
+        return redirect()->route('artistas.index');
     }
 
     /**
@@ -69,6 +77,8 @@ class artistaController extends Controller
      */
     public function destroy(string $id)
     {
-        //
+        $artista = Artista::find($id);
+        $artista->delete();
+        return redirect()->route('artistas.index');
     }
 }

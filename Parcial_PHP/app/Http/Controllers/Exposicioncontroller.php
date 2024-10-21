@@ -1,75 +1,126 @@
 <?php
 
 namespace App\Http\Controllers;
-use App\Models\Artista;
-use Illuminate\Http\Request;
 
-class exposicioncontroller extends Controller
+use Illuminate\Http\Request;
+use App\Models\Exposicion;
+use Illuminate\Support\Facades\DB;
+
+class ExposicionController extends Controller
 {
     /**
-     * Display a listing of the resource.
+     * Mostrar una lista de los recursos.
      */
     public function index()
     {
-        $exposiciones = Exposicion::with('obraArte')->get(); // Carga la obra de arte asociada
-        return view('exposiciones.index', compact('exposiciones'));
+        // Obtenemos las exposiciones y las obras relacionadas
+        $exposiciones = DB::table('exposiciones')
+            ->join('obras_de_arte', 'exposiciones.obra_id', '=', 'obras_de_arte.id')
+            ->select('exposiciones.*', 'obras_de_arte.titulo')
+            ->get();
+
+        // Retornamos la vista index con las exposiciones
+        return view('exposicion.index', ['exposiciones' => $exposiciones]);
     }
 
     /**
-     * Show the form for creating a new resource.
+     * Mostrar el formulario para crear un nuevo recurso.
      */
     public function create()
     {
-        $request->validate([
-            'fecha_inicio' => 'required',
-            'fecha_fin' => 'required',
-            'ubicacion' => 'required',
-            'nombre_evento' => 'required',
-            'obra_arte_id' => 'required|exists:obra_artes,id', // Verifica que la obra de arte exista
-        ]);
+        // Obtenemos las obras de arte para el formulario
+        $obras = DB::table('obras_de_arte')
+            ->orderBy('titulo')
+            ->get();
 
-        Exposicion::create($request->all());
-        return redirect()->route('exposiciones.index')->with('success', 'Exposición creada correctamente.');
+        // Retornamos la vista de creación con las obras
+        return view('exposicion.create', ['obras' => $obras]);
     }
-    
 
     /**
-     * Store a newly created resource in storage.
+     * Almacenar un recurso recién creado en la base de datos.
      */
     public function store(Request $request)
     {
-        //
+        // Creamos una nueva exposición
+        $exposicion = new Exposicion();
+
+        $exposicion->obra_id = $request->obra_id;
+        $exposicion->fecha_inicio = $request->fecha_inicio;
+        $exposicion->fecha_fin = $request->fecha_fin;
+        $exposicion->ubicacion = $request->ubicacion;
+        $exposicion->nombre_evento = $request->nombre_evento;
+        $exposicion->save();
+
+        // Obtenemos las exposiciones actualizadas
+        $exposiciones = DB::table('exposiciones')
+            ->join('obras_de_arte', 'exposiciones.obra_id', '=', 'obras_de_arte.id')
+            ->select('exposiciones.*', 'obras_de_arte.titulo')
+            ->get();
+
+        // Retornamos la vista index con las exposiciones actualizadas
+        return view('exposicion.index', ['exposiciones' => $exposiciones]);
     }
 
     /**
-     * Display the specified resource.
-     */
-    public function show(string $id)
-    {
-        //
-    }
-
-    /**
-     * Show the form for editing the specified resource.
+     * Mostrar el formulario para editar un recurso específico.
      */
     public function edit(string $id)
     {
-        //
+        // Buscamos la exposición por ID
+        $exposicion = Exposicion::find($id);
+
+        // Obtenemos las obras de arte para el formulario de edición
+        $obras = DB::table('obras_de_arte')
+            ->orderBy('titulo')
+            ->get();
+
+        // Retornamos la vista de edición con la exposición y las obras
+        return view('exposicion.edit', ['exposicion' => $exposicion, 'obras' => $obras]);
     }
 
     /**
-     * Update the specified resource in storage.
+     * Actualizar un recurso específico en la base de datos.
      */
     public function update(Request $request, string $id)
     {
-        //
+        // Buscamos la exposición por ID
+        $exposicion = Exposicion::find($id);
+
+        // Actualizamos los datos de la exposición
+        $exposicion->obra_id = $request->obra_id;
+        $exposicion->fecha_inicio = $request->fecha_inicio;
+        $exposicion->fecha_fin = $request->fecha_fin;
+        $exposicion->ubicacion = $request->ubicacion;
+        $exposicion->nombre_evento = $request->nombre_evento;
+        $exposicion->save();
+
+        // Obtenemos las exposiciones actualizadas
+        $exposiciones = DB::table('exposiciones')
+            ->join('obras_de_arte', 'exposiciones.obra_id', '=', 'obras_de_arte.id')
+            ->select('exposiciones.*', 'obras_de_arte.titulo')
+            ->get();
+
+        // Retornamos la vista index con las exposiciones actualizadas
+        return view('exposicion.index', ['exposiciones' => $exposiciones]);
     }
 
     /**
-     * Remove the specified resource from storage.
+     * Eliminar un recurso específico de la base de datos.
      */
     public function destroy(string $id)
     {
-        //
+        // Buscamos la exposición por ID y la eliminamos
+        $exposicion = Exposicion::find($id);
+        $exposicion->delete();
+
+        // Obtenemos las exposiciones actualizadas
+        $exposiciones = DB::table('exposiciones')
+            ->join('obras_de_arte', 'exposiciones.obra_id', '=', 'obras_de_arte.id')
+            ->select('exposiciones.*', 'obras_de_arte.titulo')
+            ->get();
+
+        // Retornamos la vista index con las exposiciones actualizadas
+        return view('exposicion.index', ['exposiciones' => $exposiciones]);
     }
 }
