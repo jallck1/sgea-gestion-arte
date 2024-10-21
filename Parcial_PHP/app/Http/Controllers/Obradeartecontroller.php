@@ -3,8 +3,8 @@
 namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
-use App\Models\Artist;
 use App\Models\ObraDeArte;
+use App\Models\Artist;
 
 
 class ObraDeArteController extends Controller
